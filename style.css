@@ -14,8 +14,8 @@
   --radius: 10px;
 }
 
-/* Dark theme: set by script.js on <html data-theme="dark"> */
-:root[data-theme="dark"] {
+/* Dark theme: active while the hidden #theme-switch checkbox is checked */
+:root:has(#theme-switch:checked) {
   --bg: #121417;
   --text: #e8eaed;
   --muted: #9aa0a6;
@@ -144,22 +144,45 @@ nav ul a.active::after {
   width: 100%;
 }
 
-/* ===== Theme toggle ===== */
+/* ===== Theme toggle (pure CSS: checkbox + label) ===== */
+.theme-switch {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
 .theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 38px;
   height: 38px;
   border: 1px solid var(--border);
   border-radius: 50%;
-  background: transparent;
-  color: var(--text);
   font-size: 1.1rem;
   cursor: pointer;
+  user-select: none;
   transition: transform 0.4s ease, border-color 0.2s ease;
+}
+
+.theme-toggle::before {
+  content: "🌙";
+}
+
+.theme-switch:checked + .theme-toggle::before {
+  content: "☀️";
 }
 
 .theme-toggle:hover {
   border-color: var(--accent);
   transform: rotate(180deg);
+}
+
+/* keyboard focus ring, since the real checkbox is hidden */
+.theme-switch:focus-visible + .theme-toggle {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ===== Buttons ===== */
