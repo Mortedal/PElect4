@@ -1,21 +1,6 @@
 /* ===== Base ===== */
+/* Dark theme is the default */
 :root {
-  --bg: #ffffff;
-  --text: #1c1f23;
-  --muted: #6b7280;
-  --accent: #1e88e5;
-  --light: #f4f7fa;
-  --border: #eeeeee;
-  --input-border: #dddddd;
-  --header-bg: rgba(255, 255, 255, 0.95);
-  --footer-bg: #1c1f23;
-  --footer-text: #cccccc;
-  --shadow: rgba(0, 0, 0, 0.08);
-  --radius: 10px;
-}
-
-/* Dark theme: active while the hidden #theme-switch checkbox is checked */
-:root:has(#theme-switch:checked) {
   --bg: #121417;
   --text: #e8eaed;
   --muted: #9aa0a6;
@@ -27,6 +12,22 @@
   --footer-bg: #0b0c0e;
   --footer-text: #9aa0a6;
   --shadow: rgba(0, 0, 0, 0.4);
+  --radius: 10px;
+}
+
+/* Light theme: active while the hidden #theme-switch checkbox is checked */
+:root:has(#theme-switch:checked) {
+  --bg: #ffffff;
+  --text: #1c1f23;
+  --muted: #6b7280;
+  --accent: #1e88e5;
+  --light: #f4f7fa;
+  --border: #eeeeee;
+  --input-border: #dddddd;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --footer-bg: #1c1f23;
+  --footer-text: #cccccc;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -167,11 +168,11 @@ nav ul a.active::after {
 }
 
 .theme-toggle::before {
-  content: "🌙";
+  content: "☀️";
 }
 
 .theme-switch:checked + .theme-toggle::before {
-  content: "☀️";
+  content: "🌙";
 }
 
 .theme-toggle:hover {
