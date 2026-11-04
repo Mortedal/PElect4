@@ -23,9 +23,9 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.lblReel1 = New System.Windows.Forms.Label()
-        Me.lblReel2 = New System.Windows.Forms.Label()
-        Me.lblReel3 = New System.Windows.Forms.Label()
+        Me.picReel1 = New System.Windows.Forms.PictureBox()
+        Me.picReel2 = New System.Windows.Forms.PictureBox()
+        Me.picReel3 = New System.Windows.Forms.PictureBox()
         Me.lblBalance = New System.Windows.Forms.Label()
         Me.lblBetCaption = New System.Windows.Forms.Label()
         Me.txtBet = New System.Windows.Forms.TextBox()
@@ -33,6 +33,9 @@ Partial Class Form1
         Me.lblResult = New System.Windows.Forms.Label()
         Me.lblHistoryCaption = New System.Windows.Forms.Label()
         Me.lstHistory = New System.Windows.Forms.ListBox()
+        CType(Me.picReel1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picReel2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picReel3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblTitle
@@ -45,46 +48,43 @@ Partial Class Form1
         Me.lblTitle.Text = "VB SLOTS"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'lblReel1
+        'picReel1
         '
-        Me.lblReel1.BackColor = System.Drawing.Color.White
-        Me.lblReel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblReel1.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.lblReel1.Location = New System.Drawing.Point(20, 65)
-        Me.lblReel1.Name = "lblReel1"
-        Me.lblReel1.Size = New System.Drawing.Size(130, 80)
-        Me.lblReel1.TabIndex = 1
-        Me.lblReel1.Text = "?"
-        Me.lblReel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.picReel1.BackColor = System.Drawing.Color.White
+        Me.picReel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.picReel1.Location = New System.Drawing.Point(20, 65)
+        Me.picReel1.Name = "picReel1"
+        Me.picReel1.Size = New System.Drawing.Size(130, 120)
+        Me.picReel1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picReel1.TabIndex = 1
+        Me.picReel1.TabStop = False
         '
-        'lblReel2
+        'picReel2
         '
-        Me.lblReel2.BackColor = System.Drawing.Color.White
-        Me.lblReel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblReel2.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.lblReel2.Location = New System.Drawing.Point(170, 65)
-        Me.lblReel2.Name = "lblReel2"
-        Me.lblReel2.Size = New System.Drawing.Size(130, 80)
-        Me.lblReel2.TabIndex = 2
-        Me.lblReel2.Text = "?"
-        Me.lblReel2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.picReel2.BackColor = System.Drawing.Color.White
+        Me.picReel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.picReel2.Location = New System.Drawing.Point(170, 65)
+        Me.picReel2.Name = "picReel2"
+        Me.picReel2.Size = New System.Drawing.Size(130, 120)
+        Me.picReel2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picReel2.TabIndex = 2
+        Me.picReel2.TabStop = False
         '
-        'lblReel3
+        'picReel3
         '
-        Me.lblReel3.BackColor = System.Drawing.Color.White
-        Me.lblReel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblReel3.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.lblReel3.Location = New System.Drawing.Point(320, 65)
-        Me.lblReel3.Name = "lblReel3"
-        Me.lblReel3.Size = New System.Drawing.Size(130, 80)
-        Me.lblReel3.TabIndex = 3
-        Me.lblReel3.Text = "?"
-        Me.lblReel3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.picReel3.BackColor = System.Drawing.Color.White
+        Me.picReel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.picReel3.Location = New System.Drawing.Point(320, 65)
+        Me.picReel3.Name = "picReel3"
+        Me.picReel3.Size = New System.Drawing.Size(130, 120)
+        Me.picReel3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picReel3.TabIndex = 3
+        Me.picReel3.TabStop = False
         '
         'lblBalance
         '
         Me.lblBalance.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.lblBalance.Location = New System.Drawing.Point(20, 160)
+        Me.lblBalance.Location = New System.Drawing.Point(20, 200)
         Me.lblBalance.Name = "lblBalance"
         Me.lblBalance.Size = New System.Drawing.Size(430, 28)
         Me.lblBalance.TabIndex = 4
@@ -93,7 +93,7 @@ Partial Class Form1
         'lblBetCaption
         '
         Me.lblBetCaption.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-        Me.lblBetCaption.Location = New System.Drawing.Point(20, 203)
+        Me.lblBetCaption.Location = New System.Drawing.Point(20, 243)
         Me.lblBetCaption.Name = "lblBetCaption"
         Me.lblBetCaption.Size = New System.Drawing.Size(55, 25)
         Me.lblBetCaption.TabIndex = 5
@@ -102,7 +102,7 @@ Partial Class Form1
         'txtBet
         '
         Me.txtBet.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-        Me.txtBet.Location = New System.Drawing.Point(80, 200)
+        Me.txtBet.Location = New System.Drawing.Point(80, 240)
         Me.txtBet.Name = "txtBet"
         Me.txtBet.Size = New System.Drawing.Size(100, 27)
         Me.txtBet.TabIndex = 6
@@ -111,7 +111,7 @@ Partial Class Form1
         'btnSpin
         '
         Me.btnSpin.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnSpin.Location = New System.Drawing.Point(200, 195)
+        Me.btnSpin.Location = New System.Drawing.Point(200, 235)
         Me.btnSpin.Name = "btnSpin"
         Me.btnSpin.Size = New System.Drawing.Size(130, 38)
         Me.btnSpin.TabIndex = 7
@@ -121,7 +121,7 @@ Partial Class Form1
         'lblResult
         '
         Me.lblResult.Font = New System.Drawing.Font("Segoe UI", 10.0!)
-        Me.lblResult.Location = New System.Drawing.Point(20, 245)
+        Me.lblResult.Location = New System.Drawing.Point(20, 285)
         Me.lblResult.Name = "lblResult"
         Me.lblResult.Size = New System.Drawing.Size(430, 50)
         Me.lblResult.TabIndex = 8
@@ -130,7 +130,7 @@ Partial Class Form1
         'lblHistoryCaption
         '
         Me.lblHistoryCaption.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.lblHistoryCaption.Location = New System.Drawing.Point(20, 300)
+        Me.lblHistoryCaption.Location = New System.Drawing.Point(20, 340)
         Me.lblHistoryCaption.Name = "lblHistoryCaption"
         Me.lblHistoryCaption.Size = New System.Drawing.Size(430, 22)
         Me.lblHistoryCaption.TabIndex = 9
@@ -142,7 +142,7 @@ Partial Class Form1
         Me.lstHistory.FormattingEnabled = True
         Me.lstHistory.HorizontalScrollbar = True
         Me.lstHistory.ItemHeight = 14
-        Me.lstHistory.Location = New System.Drawing.Point(20, 325)
+        Me.lstHistory.Location = New System.Drawing.Point(20, 365)
         Me.lstHistory.Name = "lstHistory"
         Me.lstHistory.Size = New System.Drawing.Size(430, 158)
         Me.lstHistory.TabIndex = 10
@@ -152,11 +152,11 @@ Partial Class Form1
         Me.AcceptButton = Me.btnSpin
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(470, 500)
+        Me.ClientSize = New System.Drawing.Size(470, 540)
         Me.Controls.Add(Me.lblTitle)
-        Me.Controls.Add(Me.lblReel1)
-        Me.Controls.Add(Me.lblReel2)
-        Me.Controls.Add(Me.lblReel3)
+        Me.Controls.Add(Me.picReel1)
+        Me.Controls.Add(Me.picReel2)
+        Me.Controls.Add(Me.picReel3)
         Me.Controls.Add(Me.lblBalance)
         Me.Controls.Add(Me.lblBetCaption)
         Me.Controls.Add(Me.txtBet)
@@ -169,15 +169,18 @@ Partial Class Form1
         Me.Name = "Form1"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Slot Machine"
+        CType(Me.picReel1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picReel2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picReel3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents lblTitle As System.Windows.Forms.Label
-    Friend WithEvents lblReel1 As System.Windows.Forms.Label
-    Friend WithEvents lblReel2 As System.Windows.Forms.Label
-    Friend WithEvents lblReel3 As System.Windows.Forms.Label
+    Friend WithEvents picReel1 As System.Windows.Forms.PictureBox
+    Friend WithEvents picReel2 As System.Windows.Forms.PictureBox
+    Friend WithEvents picReel3 As System.Windows.Forms.PictureBox
     Friend WithEvents lblBalance As System.Windows.Forms.Label
     Friend WithEvents lblBetCaption As System.Windows.Forms.Label
     Friend WithEvents txtBet As System.Windows.Forms.TextBox

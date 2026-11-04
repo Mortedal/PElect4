@@ -22,14 +22,20 @@ Public Class Form1
     Private history(MAX_HISTORY - 1) As String
     Private historyCount As Integer = 0
 
+    ' Picture for each symbol (same index as symbols).
+    ' Loaded from the project's Resources, which must use the same names
+    ' as the symbols: Cherry, Lemon, Bell, Star, Seven
+    Private symbolImages(4) As Image
+
     Private Const STARTING_BALANCE As Integer = 100
     Private balance As Integer = STARTING_BALANCE
     Private rnd As New Random()
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lblReel1.Text = "?"
-        lblReel2.Text = "?"
-        lblReel3.Text = "?"
+        LoadSymbolImages()
+        picReel1.Image = Nothing
+        picReel2.Image = Nothing
+        picReel3.Image = Nothing
         lblResult.Text = "Enter a bet and press Spin!"
         txtBet.Text = "10"
         UpdateBalance()
@@ -58,9 +64,9 @@ Public Class Form1
             reels(i) = rnd.Next(0, symbols.Length)
         Next
 
-        lblReel1.Text = symbols(reels(0))
-        lblReel2.Text = symbols(reels(1))
-        lblReel3.Text = symbols(reels(2))
+        picReel1.Image = symbolImages(reels(0))
+        picReel2.Image = symbolImages(reels(1))
+        picReel3.Image = symbolImages(reels(2))
 
         ' Work out the multiplier
         Dim multiplier As Integer = 0
@@ -89,6 +95,43 @@ Public Class Form1
             MessageBox.Show("You are out of money! No more spins allowed.", "Game over")
         End If
     End Sub
+
+    Private Sub LoadSymbolImages()
+        Dim missing As String = ""
+
+        For i As Integer = 0 To symbols.Length - 1
+            ' Look up the picture in My Project > Resources by the symbol's name
+            Dim img As Image = TryCast(My.Resources.ResourceManager.GetObject(symbols(i)), Image)
+
+            If img Is Nothing Then
+                ' No picture found: draw the symbol's name instead
+                missing &= symbols(i) & " "
+                img = MakeTextImage(symbols(i))
+            End If
+
+            symbolImages(i) = img
+        Next
+
+        If missing <> "" Then
+            MessageBox.Show("No picture found in Resources for: " & missing & Environment.NewLine &
+                            "The name will be shown instead.", "Missing pictures")
+        End If
+    End Sub
+
+    Private Function MakeTextImage(text As String) As Image
+        ' Creates a simple picture with the symbol's name written on it
+        Dim bmp As New Bitmap(130, 120)
+        Using g As Graphics = Graphics.FromImage(bmp)
+            g.Clear(Color.White)
+            Using f As New Font("Segoe UI", 16, FontStyle.Bold)
+                Dim fmt As New StringFormat()
+                fmt.Alignment = StringAlignment.Center
+                fmt.LineAlignment = StringAlignment.Center
+                g.DrawString(text, f, Brushes.Black, New RectangleF(0, 0, 130, 120), fmt)
+            End Using
+        End Using
+        Return bmp
+    End Function
 
     Private Sub AddToHistory(entry As String)
         If historyCount < MAX_HISTORY Then
