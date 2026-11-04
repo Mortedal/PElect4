@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SlotMachine</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <StartupObject>SlotMachine.Module1</StartupObject>
+  </PropertyGroup>
+
+</Project>
