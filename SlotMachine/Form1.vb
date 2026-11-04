@@ -23,8 +23,8 @@ Public Class Form1
     Private historyCount As Integer = 0
 
     ' Picture for each symbol (same index as symbols).
-    ' Loaded from the project's Resources, which must use the same names
-    ' as the symbols: Cherry, Lemon, Bell, Star, Seven
+    ' Loaded from the Images folder; files must use the same names
+    ' as the symbols: Cherry, Lemon, Bell, Star, Seven (e.g. Cherry.png)
     Private symbolImages(4) As Image
 
     Private Const STARTING_BALANCE As Integer = 100
@@ -99,9 +99,21 @@ Public Class Form1
     Private Sub LoadSymbolImages()
         Dim missing As String = ""
 
+        ' Pictures are in an "Images" folder next to the program's .exe
+        Dim folder As String = IO.Path.Combine(Application.StartupPath, "Images")
+        Dim extensions() As String = {".png", ".jpg", ".jpeg", ".gif", ".bmp"}
+
         For i As Integer = 0 To symbols.Length - 1
-            ' Look up the picture in My Project > Resources by the symbol's name
-            Dim img As Image = TryCast(My.Resources.ResourceManager.GetObject(symbols(i)), Image)
+            Dim img As Image = Nothing
+
+            ' Look for a file named after the symbol, e.g. Images\Cherry.png
+            For Each ext As String In extensions
+                Dim path As String = IO.Path.Combine(folder, symbols(i) & ext)
+                If IO.File.Exists(path) Then
+                    img = Image.FromFile(path)
+                    Exit For
+                End If
+            Next
 
             If img Is Nothing Then
                 ' No picture found: draw the symbol's name instead
@@ -113,7 +125,7 @@ Public Class Form1
         Next
 
         If missing <> "" Then
-            MessageBox.Show("No picture found in Resources for: " & missing & Environment.NewLine &
+            MessageBox.Show("No picture found in " & folder & " for: " & missing & Environment.NewLine &
                             "The name will be shown instead.", "Missing pictures")
         End If
     End Sub
