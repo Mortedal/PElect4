@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cash Register POS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Cash<span>Register</span></div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="register" role="tab">Register</button>
+      <button class="tab" data-view="history" role="tab">History</button>
+    </nav>
+    <div class="today" id="todayLabel"></div>
+  </header>
+
+  <main>
+    <!-- ============ REGISTER VIEW ============ -->
+    <section id="view-register" class="view">
+
+      <!-- Open register -->
+      <div id="openCard" class="card narrow hidden">
+        <h2>Open the register</h2>
+        <p class="muted">Count the cash in the drawer before the first customer and enter it here.</p>
+        <form id="openForm">
+          <label for="startingCash">Starting cash (₱)</label>
+          <input id="startingCash" type="number" inputmode="decimal" min="0" step="0.01" placeholder="2000.00" required>
+          <button class="btn primary big" type="submit">Open register</button>
+        </form>
+      </div>
+
+      <!-- Register is open -->
+      <div id="registerOpen" class="hidden">
+        <div class="stats">
+          <div class="stat"><span>Starting cash</span><strong id="statStart">₱0.00</strong></div>
+          <div class="stat"><span>Sales today</span><strong id="statSales">₱0.00</strong></div>
+          <div class="stat"><span>Transactions</span><strong id="statCount">0</strong></div>
+          <div class="stat accent"><span>Cash in drawer</span><strong id="statDrawer">₱0.00</strong></div>
+        </div>
+
+        <div id="closedBanner" class="banner hidden"></div>
+
+        <div class="grid">
+          <!-- New sale -->
+          <form id="saleForm" class="card">
+            <h2>New sale</h2>
+
+            <div class="items-head">
+              <span>Product</span><span>Price (₱)</span><span>Qty</span><span></span>
+            </div>
+            <div id="items"></div>
+            <button type="button" class="btn ghost small" id="addItem">+ Add another product</button>
+
+            <label class="photo-drop" id="photoDrop">
+              <input id="photo" type="file" accept="image/*" capture="environment">
+              <img id="photoPreview" alt="" class="hidden">
+              <span id="photoHint">📷 Take or choose a photo of the product <em>(required)</em></span>
+            </label>
+
+            <div class="total-row">
+              <span>Total</span><strong id="saleTotal">₱0.00</strong>
+            </div>
+
+            <label for="cashReceived">Cash received from customer (₱)</label>
+            <input id="cashReceived" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" required>
+            <div class="quick" id="quickCash"></div>
+
+            <div class="change-box" id="changeBox">
+              <span>Change to give</span>
+              <strong id="changeAmount">₱0.00</strong>
+            </div>
+
+            <p class="error" id="saleError" role="alert"></p>
+            <button class="btn primary big" type="submit" id="saleSubmit">Complete sale</button>
+          </form>
+
+          <!-- Today's transactions -->
+          <div class="card">
+            <div class="card-head">
+              <h2>Today's transactions</h2>
+              <button class="btn ghost small" id="closeBtn">Close register</button>
+            </div>
+            <div id="todayList" class="txn-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HISTORY VIEW ============ -->
+    <section id="view-history" class="view hidden">
+      <div class="grid history">
+        <div class="card">
+          <h2>Days</h2>
+          <label for="historyDate">Jump to date</label>
+          <input id="historyDate" type="date">
+          <div id="dayList" class="day-list"></div>
+        </div>
+        <div class="card">
+          <div id="historyDetail"><p class="muted">Select a day to see its transactions.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Change dialog after a sale -->
+  <dialog id="changeDialog">
+    <p class="muted">Sale #<span id="dlgNumber"></span> saved</p>
+    <p>Give the customer</p>
+    <div class="dlg-change" id="dlgChange"></div>
+    <p class="muted small" id="dlgBreakdown"></p>
+    <button class="btn primary big" id="dlgOk">Done — next customer</button>
+  </dialog>
+
+  <!-- Close register dialog -->
+  <dialog id="closeDialog">
+    <form id="closeForm" method="dialog">
+      <h2>Close register</h2>
+      <p class="muted">Expected cash in drawer: <strong id="closeExpected"></strong></p>
+      <label for="countedCash">Actual cash counted (₱)</label>
+      <input id="countedCash" type="number" inputmode="decimal" min="0" step="0.01" required>
+      <label for="closeNotes">Notes (optional)</label>
+      <input id="closeNotes" type="text" maxlength="500">
+      <p class="error" id="closeError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" id="closeCancel">Cancel</button>
+        <button type="submit" class="btn primary" value="confirm">Close register</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Photo viewer -->
+  <dialog id="photoDialog" class="photo-dialog">
+    <img id="photoDialogImg" alt="Product photo">
+    <button class="btn ghost" id="photoDialogClose">Close</button>
+  </dialog>
+
+  <template id="itemRow">
+    <div class="item-row">
+      <input class="i-name" type="text" placeholder="e.g. Shirt" maxlength="120" required aria-label="Product name">
+      <input class="i-price" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0.00" required aria-label="Price">
+      <input class="i-qty" type="number" inputmode="numeric" min="1" step="1" value="1" required aria-label="Quantity">
+      <button type="button" class="icon-btn i-remove" aria-label="Remove product">✕</button>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
