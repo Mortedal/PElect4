@@ -1,10 +1,10 @@
-# Cash Register POS
+# BonAmi POS
 
 A simple web point-of-sale for a store with a cash register, built with Node.js, Express and MongoDB.
 
 ## Pages
 
-- **`/`**: landing page with the store name and a **Log in** button.
+- **`/`**: landing page with the BonAmi POS name and a **Log in** button.
 - **`/login`**: pick your name and enter your PIN. On the very first run it asks you to create the **owner** account.
 - **`/app`**: the register (and, for the owner, history, reports and settings).
 
@@ -63,7 +63,7 @@ When closing, the cashier enters the cash they counted. The owner sees whether t
 
    ```bash
    cd pos
-   cp .env.example .env      # paste your connection string into MONGODB_URI, set STORE_NAME
+   cp .env.example .env      # paste your connection string into MONGODB_URI
    npm install
    npm start
    ```

@@ -3,73 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cash Register POS</title>
+  <title>BonAmi POS</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="/" id="brand">Cash<span>Register</span></a>
-    <div class="who"><a class="btn primary small" href="/login" id="navLogin">Log in</a></div>
-  </header>
-
-  <section class="landing-hero">
-    <h1 id="heroTitle">Cash Register</h1>
-    <p>Track the cash drawer, record every sale with photo proof, and see daily and monthly reports — all in one place.</p>
-    <a class="btn primary" href="/login" id="heroLogin">Log in to the register</a>
-  </section>
-
-  <section class="features">
-    <div class="feature">
-      <div class="ico">💵</div>
-      <h3>Exact change, every time</h3>
-      <p>Enter the price and the cash received, and the register shows the change to give the customer.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">📱</div>
-      <h3>Cash or online</h3>
-      <p>Record cash and online payments separately. Online payments are saved with a photo of the transfer.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">👕</div>
-      <h3>Clothing and other sales</h3>
-      <p>Each sale is marked as Clothing or Other sales, such as rent payments, so the totals stay separate.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">📷</div>
-      <h3>Photo proof</h3>
-      <p>Every clothing sale keeps a photo of the item. Refunds keep a photo too.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">🧾</div>
-      <h3>Drawer that balances</h3>
-      <p>Starting cash, cash in, cash out and refunds are all tracked, so the end-of-day count shows if anything is short.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">📊</div>
-      <h3>Reports and Excel</h3>
-      <p>The owner sees sales by day, week or month, and can download any day or month as an Excel file.</p>
-    </div>
-  </section>
-
-  <footer id="footer"></footer>
+<body class="landing">
+  <main class="landing-main">
+    <h1>BonAmi <span>POS</span></h1>
+    <a class="btn primary" href="/login" id="loginBtn">Log in</a>
+  </main>
 
   <script>
-    (async () => {
-      try {
-        const info = await fetch('/api/info').then((r) => r.json());
-        document.getElementById('heroTitle').textContent = info.storeName;
-        document.title = info.storeName + ' · POS';
-        document.getElementById('footer').textContent = '© ' + new Date().getFullYear() + ' ' + info.storeName;
-        const status = await fetch('/api/auth/status').then((r) => r.json());
-        if (status.user) {
-          for (const id of ['navLogin', 'heroLogin']) {
-            const a = document.getElementById(id);
-            a.href = '/app';
-            a.textContent = id === 'navLogin' ? 'Open register' : 'Go to the register';
-          }
+    // If already logged in, go straight to the register.
+    fetch('/api/auth/status')
+      .then((r) => r.json())
+      .then((s) => {
+        if (s.user) {
+          const a = document.getElementById('loginBtn');
+          a.href = '/app';
+          a.textContent = 'Go to register';
         }
-      } catch { /* landing page still works without the API */ }
-    })();
+      })
+      .catch(() => {});
   </script>
 </body>
 </html>

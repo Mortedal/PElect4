@@ -11,7 +11,7 @@ const owner = require('./routes/owner');
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pos';
-const STORE_NAME = process.env.STORE_NAME || 'My Store';
+const STORE_NAME = process.env.STORE_NAME || 'BonAmi POS';
 
 const app = express();
 app.disable('x-powered-by');
