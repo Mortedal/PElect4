@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register · POS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Cash<span>Register</span></a>
+    <nav class="tabs" role="tablist" id="tabs">
+      <button class="tab active" data-view="register" role="tab">Register</button>
+      <button class="tab owner-only" data-view="history" role="tab">History</button>
+      <button class="tab owner-only" data-view="reports" role="tab">Reports</button>
+      <button class="tab owner-only" data-view="settings" role="tab">Settings</button>
+    </nav>
+    <div class="who">
+      <span><strong id="whoName"></strong> <span class="role" id="whoRole"></span></span>
+      <span class="muted small" id="todayLabel"></span>
+      <button class="btn ghost small" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= REGISTER ================= -->
+    <section id="view-register" class="view">
+      <div id="openCard" class="card narrow hidden">
+        <h2>Open the register</h2>
+        <p class="muted">Count the cash in the drawer before the first customer and enter it here.</p>
+        <form id="openForm">
+          <label for="startingCash">Starting cash (₱)</label>
+          <input id="startingCash" type="number" inputmode="decimal" min="0" step="0.01" placeholder="2000.00" required>
+          <p class="error" id="openError" role="alert"></p>
+          <button class="btn primary big" type="submit">Open register</button>
+        </form>
+      </div>
+
+      <div id="registerOpen" class="hidden">
+        <div class="stats" id="stats">
+          <div class="stat"><span>Starting cash <button class="link-btn owner-only" id="editStartBtn">Edit</button></span><strong id="statStart">₱0.00</strong></div>
+          <div class="stat accent"><span>Cash in drawer now</span><strong id="statDrawer">₱0.00</strong></div>
+          <div class="stat"><span>Transactions today</span><strong id="statCount">0</strong></div>
+          <div class="stat owner-only"><span>Sales today</span><strong id="statSales">₱0.00</strong></div>
+          <div class="stat owner-only"><span>Online payments</span><strong id="statOnline">₱0.00</strong></div>
+        </div>
+
+        <div id="closedBanner" class="banner hidden">
+          <span id="closedText"></span>
+          <button class="btn ghost small owner-only" id="reopenBtn">Reopen register</button>
+        </div>
+
+        <div class="grid">
+          <!-- New sale -->
+          <form id="saleForm" class="card" novalidate>
+            <h2>New sale</h2>
+
+            <span class="field-label">Type of sale</span>
+            <div class="segmented">
+              <input type="radio" name="category" id="catClothing" value="clothing" checked>
+              <label for="catClothing">👕 Clothing</label>
+              <input type="radio" name="category" id="catOther" value="other">
+              <label for="catOther">🏠 Other sales</label>
+            </div>
+
+            <div class="items-head">
+              <span id="itemLabel">Product</span><span>Price (₱)</span><span>Qty</span><span></span>
+            </div>
+            <div id="items"></div>
+            <button type="button" class="btn ghost small" id="addItem">+ Add another item</button>
+
+            <label class="photo-drop" id="photoDrop">
+              <input id="photo" type="file" accept="image/*" capture="environment">
+              <img alt="" class="hidden">
+              <span class="hint"></span>
+            </label>
+
+            <span class="field-label">Payment</span>
+            <div class="segmented">
+              <input type="radio" name="method" id="payCash" value="cash" checked>
+              <label for="payCash">💵 Cash</label>
+              <input type="radio" name="method" id="payOnline" value="online">
+              <label for="payOnline">📱 Online payment</label>
+            </div>
+
+            <div class="total-row">
+              <span>Total</span><strong id="saleTotal">₱0.00</strong>
+            </div>
+
+            <div id="cashSection">
+              <label for="cashReceived">Cash received from customer (₱)</label>
+              <input id="cashReceived" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00">
+              <div class="quick" id="quickCash"></div>
+              <div class="change-box" id="changeBox">
+                <span>Change to give</span>
+                <strong id="changeAmount">₱0.00</strong>
+              </div>
+            </div>
+
+            <div id="onlineSection" class="hidden">
+              <label for="reference">Reference number (optional)</label>
+              <input id="reference" type="text" maxlength="60" placeholder="e.g. GCash ref. no.">
+              <label class="photo-drop" id="proofDrop">
+                <input id="proof" type="file" accept="image/*" capture="environment">
+                <img alt="" class="hidden">
+                <span class="hint"></span>
+              </label>
+            </div>
+
+            <p class="error" id="saleError" role="alert"></p>
+            <button class="btn primary big" type="submit" id="saleSubmit">Complete sale</button>
+          </form>
+
+          <div>
+            <div class="card">
+              <h2>Cash drawer</h2>
+              <p class="muted small">Use these when cash goes in or out of the drawer without a sale — for example adding coins for change, or paying for an expense.</p>
+              <div class="btn-row">
+                <button class="btn ghost" id="cashInBtn">+ Cash in</button>
+                <button class="btn ghost" id="cashOutBtn">− Cash out</button>
+              </div>
+              <button class="btn danger big" id="closeBtn">Close register</button>
+            </div>
+
+            <div class="card owner-only">
+              <div class="card-head">
+                <h2>Today's activity</h2>
+                <button class="btn ghost small" id="exportTodayBtn">Download Excel</button>
+              </div>
+              <div id="todayActivity"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HISTORY (owner) ================= -->
+    <section id="view-history" class="view hidden">
+      <div class="grid history">
+        <div class="card">
+          <h2>Days</h2>
+          <label for="historyDate">Jump to date</label>
+          <input id="historyDate" type="date">
+          <div id="dayList" class="day-list"></div>
+        </div>
+        <div class="card">
+          <div id="historyDetail"><p class="muted">Select a day to see its transactions.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REPORTS (owner) ================= -->
+    <section id="view-reports" class="view hidden">
+      <div class="card">
+        <div class="filters">
+          <div>
+            <label for="repPreset">Period</label>
+            <select id="repPreset">
+              <option value="thisMonth">This month</option>
+              <option value="lastMonth">Last month</option>
+              <option value="last7">Last 7 days</option>
+              <option value="last30">Last 30 days</option>
+              <option value="thisYear">This year</option>
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+          <div><label for="repFrom">From</label><input id="repFrom" type="date"></div>
+          <div><label for="repTo">To</label><input id="repTo" type="date"></div>
+          <div>
+            <label for="repGroup">Show by</label>
+            <select id="repGroup">
+              <option value="day">Day</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+            </select>
+          </div>
+        </div>
+        <div class="stats" id="repStats"></div>
+      </div>
+
+      <div class="card">
+        <h2>Sales</h2>
+        <div class="legend">
+          <span><i style="background: var(--series-1)"></i>Clothing</span>
+          <span><i style="background: var(--series-2)"></i>Other sales</span>
+        </div>
+        <div class="chart-wrap" id="chartWrap"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Details</h2>
+        </div>
+        <div class="table-wrap" id="repTable"></div>
+      </div>
+
+      <div class="card">
+        <h2>Download to Excel</h2>
+        <div class="filters">
+          <div><label for="exportMonth">Month</label><input id="exportMonth" type="month"></div>
+          <div><button class="btn primary" id="exportMonthBtn" style="width:100%">Download month</button></div>
+          <div><label for="exportDay">Day</label><input id="exportDay" type="date"></div>
+          <div><button class="btn primary" id="exportDayBtn" style="width:100%">Download day</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SETTINGS (owner) ================= -->
+    <section id="view-settings" class="view hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>People who can log in</h2>
+          <div id="userList" class="row-list"></div>
+        </div>
+        <form class="card" id="addUserForm">
+          <h2>Add a person</h2>
+          <label for="newName">Name</label>
+          <input id="newName" type="text" maxlength="40" required>
+          <label for="newRole">Role</label>
+          <select id="newRole">
+            <option value="cashier">Cashier — can sell and use the drawer only</option>
+            <option value="owner">Owner — can see everything</option>
+          </select>
+          <label for="newPin">PIN (4–8 digits)</label>
+          <input id="newPin" type="password" inputmode="numeric" pattern="\d{4,8}" maxlength="8" required autocomplete="new-password">
+          <p class="error" id="addUserError" role="alert"></p>
+          <button class="btn primary big" type="submit">Add</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= DIALOGS ================= -->
+  <dialog id="changeDialog">
+    <p class="muted">Sale #<span id="dlgNumber"></span> saved</p>
+    <div id="dlgCash">
+      <p>Give the customer</p>
+      <div class="dlg-change" id="dlgChange"></div>
+    </div>
+    <div id="dlgOnline" class="hidden">
+      <div class="dlg-change">✓</div>
+      <p>Online payment recorded</p>
+    </div>
+    <p class="muted small" id="dlgBreakdown"></p>
+    <button class="btn primary big" id="dlgOk">Done — next customer</button>
+  </dialog>
+
+  <dialog id="closeDialog">
+    <form id="closeForm">
+      <h2>Close register</h2>
+      <p class="muted">Cash that should be in the drawer: <strong id="closeExpected"></strong></p>
+      <label for="countedCash">Cash you counted (₱)</label>
+      <input id="countedCash" type="number" inputmode="decimal" min="0" step="0.01" required>
+      <label for="closeNotes">Notes (optional)</label>
+      <input id="closeNotes" type="text" maxlength="500">
+      <p class="error" id="closeError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Close register</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="cashDialog">
+    <form id="cashForm">
+      <h2 id="cashTitle">Cash in</h2>
+      <p class="muted small" id="cashHelp"></p>
+      <label for="cashAmount">Amount (₱)</label>
+      <input id="cashAmount" type="number" inputmode="decimal" min="0.01" step="0.01" required>
+      <label for="cashReason">Reason</label>
+      <input id="cashReason" type="text" maxlength="300" required>
+      <p class="error" id="cashError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="startDialog">
+    <form id="startForm">
+      <h2>Edit starting cash</h2>
+      <label for="newStart">Starting cash (₱)</label>
+      <input id="newStart" type="number" inputmode="decimal" min="0" step="0.01" required>
+      <p class="error" id="startError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="voidDialog">
+    <form id="voidForm">
+      <h2>Cancel sale #<span id="voidNumber"></span></h2>
+      <p class="muted small">Use this when a sale was entered by mistake. It stays in the records, crossed out, and is not counted in the totals.<span id="voidCashNote"></span></p>
+      <label for="voidReason">Reason</label>
+      <input id="voidReason" type="text" maxlength="300" required>
+      <p class="error" id="voidError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" data-close>Keep sale</button>
+        <button type="submit" class="btn danger">Cancel sale</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="refundDialog">
+    <form id="refundForm">
+      <h2>Refund for sale #<span id="refundNumber"></span></h2>
+      <p class="muted small">Sale total <strong id="refundSaleTotal"></strong> · up to <strong id="refundMax"></strong> can be refunded. The refund is recorded on today's register.</p>
+      <label for="refundAmount">Amount to pay back (₱)</label>
+      <input id="refundAmount" type="number" inputmode="decimal" min="0.01" step="0.01" required>
+      <span class="field-label">Paid back by</span>
+      <div class="segmented">
+        <input type="radio" name="refundMethod" id="refCash" value="cash" checked>
+        <label for="refCash">💵 Cash</label>
+        <input type="radio" name="refundMethod" id="refOnline" value="online">
+        <label for="refOnline">📱 Online</label>
+      </div>
+      <label for="refundReason">Reason</label>
+      <input id="refundReason" type="text" maxlength="300" required placeholder="e.g. Wrong size, item returned">
+      <label class="photo-drop" id="refundDrop">
+        <input id="refundPhoto" type="file" accept="image/*" capture="environment">
+        <img alt="" class="hidden">
+        <span class="hint"></span>
+      </label>
+      <p class="error" id="refundError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary" id="refundSubmit">Record refund</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="pinDialog">
+    <form id="pinForm">
+      <h2>Change PIN for <span id="pinUserName"></span></h2>
+      <label for="pinNew">New PIN (4–8 digits)</label>
+      <input id="pinNew" type="password" inputmode="numeric" pattern="\d{4,8}" maxlength="8" required autocomplete="new-password">
+      <p class="error" id="pinError" role="alert"></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Save PIN</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="photoDialog" class="photo-dialog">
+    <img id="photoDialogImg" alt="Photo">
+    <button class="btn ghost" data-close>Close</button>
+  </dialog>
+
+  <template id="itemRow">
+    <div class="item-row">
+      <input class="i-name" type="text" maxlength="120" aria-label="Item name">
+      <input class="i-price" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0.00" aria-label="Price">
+      <input class="i-qty" type="number" inputmode="numeric" min="1" step="1" value="1" aria-label="Quantity">
+      <button type="button" class="icon-btn i-remove" aria-label="Remove item">✕</button>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
