@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in · BonAmi POS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">BonAmi <span>POS</span></a>
+  </header>
+
+  <main>
+    <!-- First run: create owner -->
+    <div id="setupCard" class="card narrow hidden">
+      <h2>Welcome! Create the owner account</h2>
+      <p class="muted">This is the first time the system is used. The owner can see all sales, reports and settings, and can add the cashier later.</p>
+      <form id="setupForm">
+        <label for="setupName">Your name</label>
+        <input id="setupName" type="text" maxlength="40" required autocomplete="name">
+        <label for="setupPin">Choose a PIN (4–8 digits)</label>
+        <input id="setupPin" type="password" inputmode="numeric" pattern="\d{4,8}" maxlength="8" required autocomplete="new-password">
+        <label for="setupPin2">Repeat the PIN</label>
+        <input id="setupPin2" type="password" inputmode="numeric" pattern="\d{4,8}" maxlength="8" required autocomplete="new-password">
+        <p class="error" id="setupError" role="alert"></p>
+        <button class="btn primary big" type="submit">Create owner account</button>
+      </form>
+    </div>
+
+    <!-- Login -->
+    <div id="loginCard" class="card narrow hidden">
+      <div id="pickUser">
+        <h2>Who is at the register?</h2>
+        <div class="user-grid" id="userGrid"></div>
+      </div>
+      <form id="pinForm" class="hidden">
+        <h2>Hi, <span id="pinName"></span></h2>
+        <label for="pin">Enter your PIN</label>
+        <input id="pin" type="password" inputmode="numeric" pattern="\d{4,8}" maxlength="8" required autocomplete="current-password">
+        <p class="error" id="loginError" role="alert"></p>
+        <button class="btn primary big" type="submit">Log in</button>
+        <button class="btn ghost big" type="button" id="backBtn">Not me</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>

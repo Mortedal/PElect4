@@ -1,0 +1,21 @@
+{
+  "name": "pos-system",
+  "version": "1.0.0",
+  "description": "Simple cash register POS: daily starting cash, transactions with change computation and photo proof, stored in MongoDB.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.22.3",
+    "mongoose": "^8.24.10",
+    "multer": "^1.4.5-lts.2"
+  }
+}

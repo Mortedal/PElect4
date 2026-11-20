@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BonAmi POS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="landing">
+  <main class="landing-main">
+    <h1>BonAmi <span>POS</span></h1>
+    <a class="btn primary" href="/login" id="loginBtn">Log in</a>
+  </main>
+
+  <script>
+    // If already logged in, go straight to the register.
+    fetch('/api/auth/status')
+      .then((r) => r.json())
+      .then((s) => {
+        if (s.user) {
+          const a = document.getElementById('loginBtn');
+          a.href = '/app';
+          a.textContent = 'Go to register';
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
